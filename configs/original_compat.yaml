@@ -1,0 +1,20 @@
+# Approximates the ORIGINAL pipeline so results can be compared like-for-like with the new
+# leakage-free evaluation: causal order-20 filter, the 7 hard-coded intervals, no windowing,
+# full-resolution PSD (nperseg=1024, no band limit). The evaluation protocol is still the
+# corrected nested Leave-One-Engine-Out; run with --leakage-audit to see the old inflation.
+data:
+  fs: 1000
+filter:
+  cutoff_hz: 10
+  order: 20
+  zero_phase: false
+  trim_s: 0
+segment:
+  intervals: [[0, 131710], [131710, 214029], [214029, 274396], [274396, 321592],
+              [321592, 360007], [360007, 398422], [398422, -1]]
+  window_s: null
+features:
+  names: [psd]
+  nperseg: 1024
+  fmin_hz: 0
+  fmax_hz: null

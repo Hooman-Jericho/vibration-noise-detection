@@ -1,0 +1,36 @@
+# Default, leakage-free configuration. Every key is optional; see src/vibnoise/config.py.
+data:
+  fs: 1000
+  sensors: [sensor_1, sensor_2]
+  label_map: {OK_clean: 0, NG_clean: 1}
+  # "DAS64100_OK_2_1st.CSV" -> engine "OK_2". CHECK THIS AGAINST YOUR FILE NAMES with:
+  #   vibnoise inspect <data_dir>
+  engine_regex: '(?P<state>OK|NG)_(?P<unit>\d+)'
+
+filter:
+  cutoff_hz: 10
+  order: 8            # effective order 16 because of zero-phase filtering
+  zero_phase: true
+  trim_s: 1.0
+
+segment:
+  intervals: null     # null = whole recording; or [[0, 131710], [131710, 214029], ...]
+  window_s: 10        # fixed windows inside each interval (null = one window per interval)
+  hop_s: null
+
+features:
+  names: [psd]        # psd | bands | stats  (bands/stats are low-dimensional alternatives)
+  nperseg: 512
+  fmin_hz: 10
+  fmax_hz: 450
+
+model:
+  name: svm
+  seed: 42
+  n_jobs: 1
+  pca_variance: null
+
+eval:
+  inner_splits: 3
+  scoring: balanced_accuracy
+  threshold: 0.5
